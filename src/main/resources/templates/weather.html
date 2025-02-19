@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Weather App</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar for Recent Searches -->
+        <div class="sidebar">
+            <h3>Recent Searches</h3>
+            <ul>
+                <li th:each="search : ${recentSearches}">
+                    <a th:href="@{/weather(city=${search.city})}" th:text="${search.city}"></a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Main Section for Weather Info -->
+        <div class="main">
+            <h1>Weather App</h1>
+            <form action="/weather" method="get">
+                <input type="text" name="city" placeholder="Enter city..." required>
+                <button type="submit">Search</button>
+            </form>
+            
+            <div th:if="${error}" class="error-message">
+			    <p th:text="${error}"></p>
+			</div>
+		</div>
+			
+		<div class="main" th:if="${weather}">
+           
+            <!-- Weather Information Cards -->
+            <div class="weather-container">
+                <h2 th:text="${weather.city}"></h2>
+                
+                <div class="weather-cards">
+                    <div class="weather-card">
+                        <i class="fas fa-thermometer-half"></i>
+                        <p><strong>Temperature</strong></p>
+                        <p><span th:text="${weather.temperature}"></span>°C</p>
+                    </div>
+
+                    <div class="weather-card">
+                        <i class="fas fa-tint"></i>
+                        <p><strong>Humidity</strong></p>
+                        <p><span th:text="${weather.humidity}"></span>%</p>
+                    </div>
+
+                    <div class="weather-card">
+                        <i class="fas fa-wind"></i>
+                        <p><strong>Wind Speed</strong></p>
+                        <p><span th:text="${weather.windSpeed}"></span> m/s</p>
+                    </div>
+                </div>
+                
+                <!-- Hourly Forecast Section -->
+				<h2>Today's Hourly Forecast</h2>
+				<div th:class="${#lists.size(hourlyForecasts) > 5} ? 'hourly-forecast-scrollable' : 'hourly-forecast'">
+				    <th:block th:each="hour : ${hourlyForecasts}">
+				        <div class="hour-card">
+				            <h4 th:text="${hour.formattedTime}"></h4>
+				            <p><b th:text="${hour.weatherDescription}"></b></p>
+				            <p>
+				            	<i class="fas fa-thermometer-half"></i> 
+				            	<span th:text="${hour.temperature}"></span>°C
+				            </p>
+				            <p>
+				            	<i class="fas fa-tint"></i>
+				            	<span th:text="${hour.humidity}"></span>%
+				            </p>
+				            <p>
+				            	<i class="fas fa-wind"></i> 
+				            	<span th:text="${hour.windSpeed}"></span> m/s
+				            </p>
+				        </div>
+				    </th:block>
+				</div>
+            
+            	<!-- 5-Day Forecast Section -->
+			    <h2>5-Day Forecast</h2>
+			    <div class="forecast-cards">
+			        <th:block th:each="day : ${forecast}">
+			            <div class="forecast-card">
+			            	<a th:href="@{/hourlyForecast(city=${weather.city}, selectedDate=${day.date},)}" class="forecast-link">
+				                <h3 th:text="${day.date}"></h3>
+				                <p><b th:text="${day.weatherDescription}"></b></p>
+				                <p>
+				                	<i class="fas fa-thermometer-half"></i> 
+				                	<span th:text="${day.temperature}"></span>°C
+				                </p>
+				                <p> 
+				                	<i class="fas fa-tint"></i> 
+				                	<span th:text="${day.humidity}"></span>%
+				                </p>
+				                <p>
+				                	<i class="fas fa-wind"></i> 
+				                	<span th:text="${day.windSpeed}"></span> m/s
+				                </p>
+			                </a>
+			            </div>
+			        </th:block>
+			    </div>
+			</div>
+        </div>
+    </div>
+</body>
+</html>
