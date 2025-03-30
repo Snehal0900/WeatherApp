@@ -36,7 +36,7 @@ This is a weather forecast web application built with **Spring Boot, Thymeleaf, 
 2. Configure **application.properties**:
    ```properties
    spring.datasource.url=jdbc:mysql://localhost:3306/weather_db
-   spring.datasource.username=root
+   spring.datasource.username=youruser
    spring.datasource.password=yourpassword
    weather.api.key=YOUR_OPENWEATHER_API_KEY
    ```
